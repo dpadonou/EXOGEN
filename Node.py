@@ -20,7 +20,7 @@ class Node(object):
         self.parent: Node = parent
 
     def index(self, key):
-        """Return the index where the key should be.
+        """ Retourne l'index de la clé.
         :type key: str
         """
         for i, item in enumerate(self.keys):
@@ -40,8 +40,9 @@ class Node(object):
 
     def split(self):
         """Splits the node into two and stores them as child nodes.
-        extract a pivot from the child to be inserted into the keys of the parent.
-        @:return key and two children
+        extraire un pivot de l'enfant à insérer dans les clés du parent.
+        
+        @:retourne la clé et deux enfants
         """
         global splits, parent_splits
         splits += 1
@@ -76,14 +77,14 @@ class Node(object):
         parent_fusions += 1
 
         index = self.parent.index(self.keys[0])
-        # merge this node with the next node
+        # Fusionner ce Noeud avec le Noeud suivant
         if index < len(self.parent.keys):
             next_node: Node = self.parent.values[index + 1]
             next_node.keys[0:0] = self.keys + [self.parent.keys[index]]
             for child in self.values:
                 child.parent = next_node
             next_node.values[0:0] = self.values
-        else:  # If self is the last node, merge with prev
+        else:  # Si self est le dernier Noeud alors fusionner avec prev
             prev: Node = self.parent.values[-2]
             prev.keys += [self.parent.keys[-1]] + self.keys
             for child in self.values:

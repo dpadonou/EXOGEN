@@ -5,11 +5,13 @@ from Node import parent_splits
 from Node import fusions
 from Leaf import Leaf
 class BPlusTree(object):
-    """B+ tree object, consisting of nodes.
-    Nodes will automatically be split into two once it is full. When a split occurs, a key will
-    'float' upwards and be inserted into the parent node to act as a pivot.
-    Attributes:
-        maximum (int): The maximum number of keys each node can hold.
+    
+    """ Un objet B+ constitué de Noeuds 
+    Un noeud est automatiquement divisé en deux dès qu'il est rempli (Nombre d'éléments supérieur à maximum). 
+    Quand un découpage se produit, on envoie l'élément du milieu vers le haut (dans le noeud parent) pour servir de pivot.
+
+    Returns:
+         maximum (int): Le nombre maximum d'éléments que chaque Noeud peut comporter.
     """
     root: Node
 
@@ -19,13 +21,15 @@ class BPlusTree(object):
         self.minimum: int = self.maximum // 2
         self.depth = 0
 
+
+    """ retrouver une feuille
+        Retourne:
+        Leaf: la feuille qui comtient la clé (key)
+    """
     def find(self, key) -> Leaf:
-        """ find the leaf
-        Returns:
-            Leaf: the leaf which should have the key
-        """
         node = self.root
-        # Traverse tree until leaf node is reached.
+        
+        # Parcours l'arbre jusqu'à retrouver la clé.
         while type(node) is not Leaf:
             node = node[key]
 
@@ -35,14 +39,14 @@ class BPlusTree(object):
         return self.find(item)[item]
 
     def query(self, key):
-        """Returns a value for a given key, and None if the key does not exist."""
+        """ retourne une valeur pour la clé donnée et rien si la clé n'existe pas"""
         leaf = self.find(key)
         return leaf[key] if key in leaf.keys else None
 
     def change(self, key, value):
-        """change the value
+        """change la valeur
         Returns:
-            (bool,Leaf): the leaf where the key is. return False if the key does not exist
+         (bool,Leaf): la feuille où se trouve la clé, retourne false si la clé n'existe pas 
         """
         leaf = self.find(key)
         if key not in leaf.keys:
@@ -52,9 +56,9 @@ class BPlusTree(object):
             return True, leaf
 
     def __setitem__(self, key, value, leaf=None):
-        """Inserts a key-value pair after traversing to a leaf node. If the leaf node is full, split
-              the leaf node into two.
-              """
+        """Insère une paire clé-valeur après avoir traversé un nœud feuille. Si le noeud feuille est plein, divise
+            le nœud de feuille en deux
+            """
         if leaf is None:
             leaf = self.find(key)
         leaf[key] = value
@@ -64,7 +68,7 @@ class BPlusTree(object):
     def insert(self, key, value):
         """
         Returns:
-            (bool,Leaf): the leaf where the key is inserted. return False if already has same key
+        (bool,Leaf): la feuille où la clé est insérée. Retourne False si la même clé existe déjà.
         """
         leaf = self.find(key)
         if key in leaf.keys:
@@ -74,8 +78,8 @@ class BPlusTree(object):
             return True, leaf
 
     def insert_index(self, key, values: list[Node]):
-        """For a parent and child node,
-                    Insert the values from the child into the values of the parent."""
+        """Pour un nœud parent et un nœud enfant,
+         Insérez les valeurs de l'enfant dans les valeurs du parent."""
         parent = values[1].parent
         if parent is None:
             values[0].parent = values[1].parent = self.root = Node()
@@ -85,11 +89,11 @@ class BPlusTree(object):
             return
 
         parent[key] = values
-        # If the node is full, split the  node into two.
+        # Si le noeud est plein, diviser le noeud en deux
         if len(parent.keys) > self.maximum:
             self.insert_index(*parent.split())
-        # Once a leaf node is split, it consists of a internal node and two leaf nodes.
-        # These need to be re-inserted back into the tree.
+        # Après division, un noeud feuille est composé d'un noeud interne et de deux noeuds feuilles
+        # Une réinsertion dans l'arbre est nécessaire
 
     def delete(self, key, node: Node = None):
         if node is None:
@@ -121,14 +125,14 @@ class BPlusTree(object):
         #     node.keys[i - 1] = self.keys[0]
 
     def show(self, node=None, file=None, _prefix="", _last=True):
-        """Prints the keys at each level."""
+        """Afficher les éléments de chaque niveau"""
         if node is None:
             node = self.root
         print(_prefix, "`- " if _last else "|- ", node.keys, sep="", file=file)
         _prefix += "   " if _last else "|  "
 
         if type(node) is Node:
-            # Recursively print the key of child nodes (if these exist).
+            # Affiche récursivement les éléments des noeuds enfant (s'ils existent).
             for i, child in enumerate(node.values):
                 _last = (i == len(node.values) - 1)
                 self.show(child, file, _prefix, _last)

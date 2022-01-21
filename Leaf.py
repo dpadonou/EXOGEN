@@ -5,9 +5,9 @@ from Node import Node
 class Leaf(Node):
     def __init__(self, parent=None, prev_node=None, next_node=None):
         """
-        Create a new leaf in the leaf link
-        :type prev_node: Leaf
-        :type next_node: Leaf
+        Créer une nouvelle feuille
+        :type prev_node: Leaf (Noeud gauche)
+        :type next_node: Leaf (Noeud droite)
         """
         super(Leaf, self).__init__(parent)
         self.next: Leaf = next_node
@@ -40,8 +40,8 @@ class Leaf(Node):
 
         self.keys: list = self.keys[mid:]
         self.values: list = self.values[mid:]
-
-        # When the leaf node is split, set the parent key to the left-most key of the right child node.
+        
+        # Lorsque le nœud feuille est divisé, définissez la clé parent à la clé la plus à gauche du nœud enfant droit.
         return self.keys[0], [left, self]
 
     def __delitem__(self, key):
