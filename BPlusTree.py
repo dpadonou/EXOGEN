@@ -1,3 +1,4 @@
+import random
 from Node import Node
 from Node import splits
 from Node import parent_fusions
@@ -65,6 +66,15 @@ class BPlusTree(object):
         if len(leaf.keys) > self.maximum:
             self.insert_index(*leaf.split())
 
+    def generateNumber(self,fix_seed):
+        random.seed(fix_seed)
+        list_element = []
+        while(len(list_element)<20):
+            nbr = random.randint(1,20)
+            if nbr not in list_element :
+                list_element.append(nbr)
+        return list_element
+    
     def insert(self, key, value):
         """
         Returns:

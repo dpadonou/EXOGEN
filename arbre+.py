@@ -2,20 +2,17 @@ import random
 # for demo test
 
 from BPlusTree import BPlusTree
-
 def main():
     bplustree = BPlusTree()
 
-    random_list = []
-    for i in range(20):
-        random.seed(i)
-        # Générer un Nombre au hasard entre 1 à 50.
-        random_list.append(random.randint(1, 50) )
+    random_list = bplustree.generateNumber(1)
+
     for i in random_list:
         bplustree[i] = 'test' + str(i)
         print('Insert ' + str(i))
         bplustree.show()
 
+    #print(list_element)
     #random.shuffle(random_list)
     #for i in random_list:
         #print('Delete ' + str(i))
