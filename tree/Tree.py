@@ -1,4 +1,3 @@
-import random
 from typing import List
 
 from Leaf import Leaf
@@ -9,7 +8,7 @@ from Node import parent_splits
 from Node import splits
 
 
-class BPlusTree(object):
+class Tree(object):
     """ Un objet B+ constitué de Noeuds
     Un noeud est automatiquement divisé en deux dès qu'il est rempli (Nombre d'éléments supérieur à maximum). 
     Quand un découpage se produit, on envoie l'élément du milieu vers le haut (dans le noeud parent) pour servir de pivot.
@@ -68,15 +67,6 @@ class BPlusTree(object):
         leaf[key] = value
         if len(leaf.keys) > self.maximum:
             self.insert_index(*leaf.split())
-
-    def generateNumber(self, fix_seed, max_elem):
-        random.seed(fix_seed)
-        list_element = []
-        while len(list_element) < max_elem:
-            nbr = random.randint(1, max_elem)
-            if nbr not in list_element:
-                list_element.append(nbr)
-        return list_element
 
     def insert(self, key, value):
         """

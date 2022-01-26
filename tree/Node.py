@@ -1,10 +1,12 @@
-global splits 
+global splits
 splits = 0
-global parent_fusions 
+global parent_fusions
 parent_fusions = 0
-global fusions 
+global fusions
 fusions = 0
 parent_splits = 0
+
+
 class Node(object):
     """Base node object. It should be index node
     Each node stores keys and children.

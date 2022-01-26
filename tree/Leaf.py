@@ -1,7 +1,6 @@
-
-from Node import fusions
-from Node import splits
 from Node import Node
+
+
 class Leaf(Node):
     def __init__(self, parent=None, prev_node=None, next_node=None):
         """
@@ -40,7 +39,7 @@ class Leaf(Node):
 
         self.keys: list = self.keys[mid:]
         self.values: list = self.values[mid:]
-        
+
         # Lorsque le nœud feuille est divisé, définissez la clé parent à la clé la plus à gauche du nœud enfant droit.
         return self.keys[0], [left, self]
 
