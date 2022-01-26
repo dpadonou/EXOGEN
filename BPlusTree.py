@@ -1,13 +1,16 @@
 import random
+from typing import List
+
+from Leaf import Leaf
 from Node import Node
-from Node import splits
+from Node import fusions
 from Node import parent_fusions
 from Node import parent_splits
-from Node import fusions
-from Leaf import Leaf
+from Node import splits
+
+
 class BPlusTree(object):
-    
-    """ Un objet B+ constitué de Noeuds 
+    """ Un objet B+ constitué de Noeuds
     Un noeud est automatiquement divisé en deux dès qu'il est rempli (Nombre d'éléments supérieur à maximum). 
     Quand un découpage se produit, on envoie l'élément du milieu vers le haut (dans le noeud parent) pour servir de pivot.
 
@@ -22,14 +25,14 @@ class BPlusTree(object):
         self.minimum: int = self.maximum // 2
         self.depth = 0
 
-
     """ retrouver une feuille
         Retourne:
         Leaf: la feuille qui comtient la clé (key)
     """
+
     def find(self, key) -> Leaf:
         node = self.root
-        
+
         # Parcours l'arbre jusqu'à retrouver la clé.
         while type(node) is not Leaf:
             node = node[key]
@@ -66,15 +69,15 @@ class BPlusTree(object):
         if len(leaf.keys) > self.maximum:
             self.insert_index(*leaf.split())
 
-    def generateNumber(self,fix_seed):
+    def generateNumber(self, fix_seed, max_elem):
         random.seed(fix_seed)
         list_element = []
-        while(len(list_element)<20):
-            nbr = random.randint(1,20)
-            if nbr not in list_element :
+        while len(list_element) < max_elem:
+            nbr = random.randint(1, max_elem)
+            if nbr not in list_element:
                 list_element.append(nbr)
         return list_element
-    
+
     def insert(self, key, value):
         """
         Returns:
@@ -87,7 +90,7 @@ class BPlusTree(object):
             self.__setitem__(key, value, leaf)
             return True, leaf
 
-    def insert_index(self, key, values: list[Node]):
+    def insert_index(self, key, values: List[Node]):
         """Pour un nœud parent et un nœud enfant,
          Insérez les valeurs de l'enfant dans les valeurs du parent."""
         parent = values[1].parent
