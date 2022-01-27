@@ -1,6 +1,10 @@
 from Node import Node
 
 
+global splits
+splits = 0
+
+
 class Leaf(Node):
     def __init__(self, parent=None, prev_node=None, next_node=None):
         """

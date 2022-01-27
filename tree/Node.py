@@ -1,3 +1,5 @@
+from typing import List
+
 global splits
 splits = 0
 global parent_fusions
@@ -18,7 +20,7 @@ class Node(object):
         """Child nodes are stored in values. Parent nodes simply act as a medium to traverse the tree.
         :type parent: Node"""
         self.keys: list = []
-        self.values: list[Node] = []
+        self.values: List[Node] = []
         self.parent: Node = parent
 
     def index(self, key):

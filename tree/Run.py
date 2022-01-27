@@ -10,10 +10,13 @@ def main():
 
     seedVal = askVals("Facteur de génération")
     maxNbr = askVals("Nombre d'éléments")
+    random_list = generateNumber(seedVal, maxNbr)
+
+    print("=================================== Generated values =====================================")
+    print(random_list)
+    input()
 
     print("================================== Generating B+ tree ====================================")
-
-    random_list = generateNumber(seedVal, maxNbr)
 
     for i in random_list:
         tree[i] = 'test' + str(i)
