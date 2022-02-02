@@ -60,8 +60,12 @@ class Node(object):
         key = self.keys[mid]
         self.keys = self.keys[mid + 1:]
         self.values = self.values[mid + 1:]
-
+        #print("splits-Node:", splits)
         return key, [left, self]
+    
+    def show(self):
+        
+        print(self.values)
 
     def __delitem__(self, key):
         i = self.index(key)

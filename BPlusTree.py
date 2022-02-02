@@ -1,10 +1,16 @@
+from asyncio.windows_events import NULL
+from genericpath import exists
+from pickle import FALSE
 import random
+from webbrowser import get
 from Node import Node
 from Node import splits
 from Node import parent_fusions
 from Node import parent_splits
 from Node import fusions
 from Leaf import Leaf
+global compteur 
+compteur = 0
 class BPlusTree(object):
     
     """ Un objet B+ constitué de Noeuds 
@@ -17,11 +23,14 @@ class BPlusTree(object):
     root: Node
 
     def __init__(self, maximum=4):
+        
         self.root = Leaf()
         self.maximum: int = maximum if maximum > 2 else 2
         self.minimum: int = self.maximum // 2
         self.depth = 0
 
+    def __getitem__(self, item):
+        return self.find(item)[item]
 
     """ retrouver une feuille
         Retourne:
@@ -29,20 +38,19 @@ class BPlusTree(object):
     """
     def find(self, key) -> Leaf:
         node = self.root
-        
-        # Parcours l'arbre jusqu'à retrouver la clé.
         while type(node) is not Leaf:
             node = node[key]
-
+         
         return node
 
-    def __getitem__(self, item):
-        return self.find(item)[item]
-
+   
+    
     def query(self, key):
         """ retourne une valeur pour la clé donnée et rien si la clé n'existe pas"""
         leaf = self.find(key)
         return leaf[key] if key in leaf.keys else None
+    
+       
 
     def change(self, key, value):
         """change la valeur
@@ -55,6 +63,37 @@ class BPlusTree(object):
         else:
             leaf[key] = value
             return True, leaf
+        
+    def getNode(self,node, key):
+            
+        global compteur 
+        compteur += 1
+        if key in node.keys :
+            return  compteur, node.keys;
+        elif key < node.keys[0] :
+            if len(node.values) <=2 :
+                return self.getNode(node.values[0], key)
+            else :
+                for i in range(len(node.values)) :
+                    if key in node.values[i].keys :
+                        return compteur + 1, node.values[i].keys
+                    
+                for j in range(len(node.values)):
+                       # if(node.values[j].keys[-1] >= key):
+                            return self.getNode(node.values[j], key)
+                
+        else :
+                if len(node.values) <=2 :
+                    return self.getNode(node.values[1], key)
+                else :
+                    for i in range(len(node.values)) :
+                       # print(node.values[i])
+                        if key in node.values[i].keys :
+                            return compteur + 1 , node.values[i].keys
+                        
+                    for j in range(len(node.values)):
+                       # if(node.values[j].keys[-1] >= key):
+                            return self.getNode(node.values[j], key)
 
     def __setitem__(self, key, value, leaf=None):
         """Insère une paire clé-valeur après avoir traversé un nœud feuille. Si le noeud feuille est plein, divise
@@ -69,8 +108,8 @@ class BPlusTree(object):
     def generateNumber(self,fix_seed):
         random.seed(fix_seed)
         list_element = []
-        while(len(list_element)<20):
-            nbr = random.randint(1,20)
+        while(len(list_element)<80):
+            nbr = random.randint(1,80)
             if nbr not in list_element :
                 list_element.append(nbr)
         return list_element
