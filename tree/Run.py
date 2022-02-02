@@ -1,8 +1,8 @@
 # for demo test
 
 from Tree import Tree
-from util.Util import askVals
-from util.Util import generateNumber
+from utils.Util import askVals
+from utils.Util import generateNumber
 
 
 def main():
