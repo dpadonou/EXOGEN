@@ -11,6 +11,9 @@ from Node import fusions
 from Leaf import Leaf
 global compteur 
 compteur = 0
+global cptRecur
+cptRecur = 0
+
 class BPlusTree(object):
     
     """ Un objet B+ constitué de Noeuds 
@@ -63,38 +66,19 @@ class BPlusTree(object):
         else:
             leaf[key] = value
             return True, leaf
-        
-    def getNode(self,node, key):
+    
+    def search(self, key):
+        node = self.root
+        while type(node) is not Leaf:
+            if key in node.keys:
+                return node.keys
             
-        global compteur 
-        compteur += 1
-        if key in node.keys :
-            return  compteur, node.keys;
-        elif key < node.keys[0] :
-            if len(node.values) <=2 :
-                return self.getNode(node.values[0], key)
-            else :
-                for i in range(len(node.values)) :
-                    if key in node.values[i].keys :
-                        return compteur + 1, node.values[i].keys
-                    
-                for j in range(len(node.values)):
-                       # if(node.values[j].keys[-1] >= key):
-                            return self.getNode(node.values[j], key)
-                
-        else :
-                if len(node.values) <=2 :
-                    return self.getNode(node.values[1], key)
-                else :
-                    for i in range(len(node.values)) :
-                       # print(node.values[i])
-                        if key in node.values[i].keys :
-                            return compteur + 1 , node.values[i].keys
-                        
-                    for j in range(len(node.values)):
-                       # if(node.values[j].keys[-1] >= key):
-                            return self.getNode(node.values[j], key)
-
+            node = node[key]
+         
+        return node.keys
+    
+        
+    
     def __setitem__(self, key, value, leaf=None):
         """Insère une paire clé-valeur après avoir traversé un nœud feuille. Si le noeud feuille est plein, divise
             le nœud de feuille en deux
@@ -108,8 +92,8 @@ class BPlusTree(object):
     def generateNumber(self,fix_seed):
         random.seed(fix_seed)
         list_element = []
-        while(len(list_element)<80):
-            nbr = random.randint(1,80)
+        while(len(list_element)<1000):
+            nbr = random.randint(1,1000)
             if nbr not in list_element :
                 list_element.append(nbr)
         return list_element

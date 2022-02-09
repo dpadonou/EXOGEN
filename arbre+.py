@@ -13,7 +13,7 @@ def main():
     print()
     print()
     for i in random_list:
-        bplustree[i] = 'test' + str(i)
+        bplustree[i] = str(i)
         #print('Insert ' + str(i))
         
     bplustree.show()
@@ -27,15 +27,15 @@ def main():
        # bplustree.show()
 
     
-    val = 60
+    val = 500
     print()
     print()
     #print(bplustree.root.values[1].values[2].keys)
     #print(len(bplustree.root.keys))
     print()
-    cpt, node= bplustree.getNode( bplustree.root, val)
+    node= bplustree.search( val)
     print(node)
-    print(cpt)
+    #print(cpt)
     #if val in node.keys:
        # for i in node.parent.keys:
           # print(i)
