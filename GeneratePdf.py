@@ -39,10 +39,10 @@ if __name__ == '__main__':
     #   \item[Second] The second item
     #   \item[Third] The third etc \ldots
     # \end{description}
-
+    a = "la"
     with doc.create(Section('"Description" list')):
         with doc.create(Description()) as desc:
-            desc.add_item("First", "The first item")
+            desc.add_item("First", "The first item" )
             desc.add_item("Second", "The second item")
             desc.add_item("Third", NoEscape("The third etc \\ldots"))
 
