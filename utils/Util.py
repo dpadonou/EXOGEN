@@ -23,3 +23,7 @@ def askVals(text):
             val = input(text + ": ")
         else:
             return int_val
+
+
+def askOption():
+    input("Mettre l'élément médian dans le fils gauche (O/N) ? default (O): ")

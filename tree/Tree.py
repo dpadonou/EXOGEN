@@ -7,6 +7,12 @@ from Node import parent_fusions
 from Node import parent_splits
 from Node import splits
 
+global compteur
+compteur = 0
+global j
+j = -1
+global lp
+lp = None
 
 class Tree(object):
     """ Un objet B+ constitué de Noeuds
@@ -157,3 +163,74 @@ class Tree(object):
         while type(node) is not Leaf:
             node = node.values[0]
         return node
+
+    def search_range(self, start, end):
+        global compteur
+        compteur = 0
+        node = self.root
+        leaves: list[Node] = []
+
+        while type(node) is not Leaf:
+            compteur += 1
+            leaves.append(node)
+            node = node[start]
+
+        if start not in node.keys:
+            return False, 0, []
+        else:
+            while True:
+                leaves.append(node)
+                compteur += 1
+                if (end in node.keys) or (node.next is None):
+                    break
+                else:
+                    node = node.next
+
+            if end not in node.keys:
+                return False, 0, []
+            else:
+                return True, compteur, leaves
+
+    def search(self, key):
+        global compteur
+        compteur += 1
+        node = self.root
+        while type(node) is not Leaf:
+            compteur += 1
+            if key in node.keys:
+                return compteur, node.keys
+            node = node[key]
+
+        return compteur, node.keys if key in node.keys else None
+
+    # def go_deeper(self, node, key):
+    #     global j, lp
+    #     for i in range(len(node.values)):
+    #         if key in node.values[i].keys:
+    #             return compteur + 1, node.values[i].keys
+    #
+    #     if type(node.values[0].values[0]) is Leaf:
+    #         lp = node
+    #     else:
+    #         for k in range(len(node.values)):
+    #             return self.getNode(node.values[k], key)
+    #
+    #     while j < len(lp.values):
+    #         j += 1
+    #         return self.getNode(lp.values[j], key)
+    #
+    # def getNode(self, node, key):
+    #     global compteur
+    #     compteur += 1
+    #     if key in node.keys:
+    #         return compteur, node.keys
+    #     elif key < node.keys[0]:
+    #         if len(node.values) <= 2:
+    #             return self.getNode(node.values[0], key)
+    #         else:
+    #             return self.go_deeper(node, key)
+    #     else:
+    #         if len(node.values) <= 2:
+    #             return self.getNode(node.values[1], key)
+    #         else:
+    #             return self.go_deeper(node, key)

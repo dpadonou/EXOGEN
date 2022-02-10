@@ -28,7 +28,7 @@ class Node(object):
         :type key: str
         """
         for i, item in enumerate(self.keys):
-            if key < item:
+            if key <= item:
                 return i
 
         return len(self.keys)
@@ -45,7 +45,7 @@ class Node(object):
     def split(self):
         """Splits the node into two and stores them as child nodes.
         extraire un pivot de l'enfant à insérer dans les clés du parent.
-        
+
         @:retourne la clé et deux enfants
         """
         global splits, parent_splits
@@ -64,7 +64,7 @@ class Node(object):
         key = self.keys[mid]
         self.keys = self.keys[mid + 1:]
         self.values = self.values[mid + 1:]
-
+        # print("splits-Node:", splits)
         return key, [left, self]
 
     def __delitem__(self, key):
