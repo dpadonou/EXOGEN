@@ -9,7 +9,7 @@ fusions = 0
 parent_splits = 0
 
 
-class Node(object):
+class Noeud(object):
     """Base node object. It should be index node
     Each node stores keys and children.
     Attributes:
@@ -18,10 +18,10 @@ class Node(object):
 
     def __init__(self, parent=None):
         """Child nodes are stored in values. Parent nodes simply act as a medium to traverse the tree.
-        :type parent: Node"""
+        :type parent: Noeud"""
         self.keys: list = []
-        self.values: List[Node] = []
-        self.parent: Node = parent
+        self.values: List[Noeud] = []
+        self.parent: Noeud = parent
 
     def index(self, key):
         """ Retourne l'index de la clé.
@@ -52,7 +52,7 @@ class Node(object):
         splits += 1
         parent_splits += 1
 
-        left = Node(self.parent)
+        left = Noeud(self.parent)
 
         mid = len(self.keys) // 2
 
@@ -64,7 +64,7 @@ class Node(object):
         key = self.keys[mid]
         self.keys = self.keys[mid + 1:]
         self.values = self.values[mid + 1:]
-        # print("splits-Node:", splits)
+        # print("splits-Noeud:", splits)
         return key, [left, self]
 
     def __delitem__(self, key):
@@ -83,13 +83,13 @@ class Node(object):
         index = self.parent.index(self.keys[0])
         # Fusionner ce Noeud avec le Noeud suivant
         if index < len(self.parent.keys):
-            next_node: Node = self.parent.values[index + 1]
+            next_node: Noeud = self.parent.values[index + 1]
             next_node.keys[0:0] = self.keys + [self.parent.keys[index]]
             for child in self.values:
                 child.parent = next_node
             next_node.values[0:0] = self.values
         else:  # Si self est le dernier Noeud alors fusionner avec prev
-            prev: Node = self.parent.values[-2]
+            prev: Noeud = self.parent.values[-2]
             prev.keys += [self.parent.keys[-1]] + self.keys
             for child in self.values:
                 child.parent = prev
@@ -98,7 +98,7 @@ class Node(object):
     def borrow_key(self, minimum: int):
         index = self.parent.index(self.keys[0])
         if index < len(self.parent.keys):
-            next_node: Node = self.parent.values[index + 1]
+            next_node: Noeud = self.parent.values[index + 1]
             if len(next_node.keys) > minimum:
                 self.keys += [self.parent.keys[index]]
 
@@ -108,7 +108,7 @@ class Node(object):
                 self.parent.keys[index] = next_node.keys.pop(0)
                 return True
         elif index != 0:
-            prev: Node = self.parent.values[index - 1]
+            prev: Noeud = self.parent.values[index - 1]
             if len(prev.keys) > minimum:
                 self.keys[0:0] = [self.parent.keys[index - 1]]
 

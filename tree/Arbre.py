@@ -1,11 +1,11 @@
 from typing import List
 
-from Leaf import Leaf
-from Node import Node
-from Node import fusions
-from Node import parent_fusions
-from Node import parent_splits
-from Node import splits
+from Feuille import Feuille
+from Noeud import Noeud
+from Noeud import fusions
+from Noeud import parent_fusions
+from Noeud import parent_splits
+from Noeud import splits
 
 global compteur
 compteur = 0
@@ -14,7 +14,8 @@ j = -1
 global lp
 lp = None
 
-class Tree(object):
+
+class Arbre(object):
     """ Un objet B+ constitué de Noeuds
     Un noeud est automatiquement divisé en deux dès qu'il est rempli (Nombre d'éléments supérieur à maximum). 
     Quand un découpage se produit, on envoie l'élément du milieu vers le haut (dans le noeud parent) pour servir de pivot.
@@ -22,24 +23,24 @@ class Tree(object):
     Returns:
          maximum (int): Le nombre maximum d'éléments que chaque Noeud peut comporter.
     """
-    root: Node
+    root: Noeud
 
     def __init__(self, maximum=4):
-        self.root = Leaf()
+        self.root = Feuille()
         self.maximum: int = maximum if maximum > 2 else 2
         self.minimum: int = self.maximum // 2
         self.depth = 0
 
     """ retrouver une feuille
         Retourne:
-        Leaf: la feuille qui comtient la clé (key)
+        Feuille: la feuille qui comtient la clé (key)
     """
 
-    def find(self, key) -> Leaf:
+    def find(self, key) -> Feuille:
         node = self.root
 
         # Parcours l'arbre jusqu'à retrouver la clé.
-        while type(node) is not Leaf:
+        while type(node) is not Feuille:
             node = node[key]
 
         return node
@@ -55,7 +56,7 @@ class Tree(object):
     def change(self, key, value):
         """change la valeur
         Returns:
-         (bool,Leaf): la feuille où se trouve la clé, retourne false si la clé n'existe pas 
+         (bool,Feuille): la feuille où se trouve la clé, retourne false si la clé n'existe pas
         """
         leaf = self.find(key)
         if key not in leaf.keys:
@@ -77,7 +78,7 @@ class Tree(object):
     def insert(self, key, value):
         """
         Returns:
-        (bool,Leaf): la feuille où la clé est insérée. Retourne False si la même clé existe déjà.
+        (bool,Feuille): la feuille où la clé est insérée. Retourne False si la même clé existe déjà.
         """
         leaf = self.find(key)
         if key in leaf.keys:
@@ -86,12 +87,12 @@ class Tree(object):
             self.__setitem__(key, value, leaf)
             return True, leaf
 
-    def insert_index(self, key, values: List[Node]):
+    def insert_index(self, key, values: List[Noeud]):
         """Pour un nœud parent et un nœud enfant,
          Insérez les valeurs de l'enfant dans les valeurs du parent."""
         parent = values[1].parent
         if parent is None:
-            values[0].parent = values[1].parent = self.root = Node()
+            values[0].parent = values[1].parent = self.root = Noeud()
             self.depth += 1
             self.root.keys = [key]
             self.root.values = values
@@ -104,7 +105,7 @@ class Tree(object):
         # Après division, un noeud feuille est composé d'un noeud interne et de deux noeuds feuilles
         # Une réinsertion dans l'arbre est nécessaire
 
-    def delete(self, key, node: Node = None):
+    def delete(self, key, node: Noeud = None):
         if node is None:
             node = self.find(key)
         del node[key]
@@ -137,10 +138,10 @@ class Tree(object):
         """Afficher les éléments de chaque niveau"""
         if node is None:
             node = self.root
-        print(_prefix, "`- " if _last else "|- ", node.keys, sep="", file=file)
+        print(_prefix, "\- " if _last else "|- ", node.keys, sep="", file=file)
         _prefix += "   " if _last else "|  "
 
-        if type(node) is Node:
+        if type(node) is Noeud:
             # Affiche récursivement les éléments des noeuds enfant (s'ils existent).
             for i, child in enumerate(node.values):
                 _last = (i == len(node.values) - 1)
@@ -158,9 +159,9 @@ class Tree(object):
                 print('Insert ' + str(i) + 'items')
         return i + 1
 
-    def leftmost_leaf(self) -> Leaf:
+    def leftmost_leaf(self) -> Feuille:
         node = self.root
-        while type(node) is not Leaf:
+        while type(node) is not Feuille:
             node = node.values[0]
         return node
 
@@ -168,9 +169,9 @@ class Tree(object):
         global compteur
         compteur = 0
         node = self.root
-        leaves: list[Node] = []
+        leaves: list[Noeud] = []
 
-        while type(node) is not Leaf:
+        while type(node) is not Feuille:
             compteur += 1
             leaves.append(node)
             node = node[start]
@@ -195,42 +196,10 @@ class Tree(object):
         global compteur
         compteur += 1
         node = self.root
-        while type(node) is not Leaf:
+        while type(node) is not Feuille:
             compteur += 1
             if key in node.keys:
                 return compteur, node.keys
             node = node[key]
 
         return compteur, node.keys if key in node.keys else None
-
-    # def go_deeper(self, node, key):
-    #     global j, lp
-    #     for i in range(len(node.values)):
-    #         if key in node.values[i].keys:
-    #             return compteur + 1, node.values[i].keys
-    #
-    #     if type(node.values[0].values[0]) is Leaf:
-    #         lp = node
-    #     else:
-    #         for k in range(len(node.values)):
-    #             return self.getNode(node.values[k], key)
-    #
-    #     while j < len(lp.values):
-    #         j += 1
-    #         return self.getNode(lp.values[j], key)
-    #
-    # def getNode(self, node, key):
-    #     global compteur
-    #     compteur += 1
-    #     if key in node.keys:
-    #         return compteur, node.keys
-    #     elif key < node.keys[0]:
-    #         if len(node.values) <= 2:
-    #             return self.getNode(node.values[0], key)
-    #         else:
-    #             return self.go_deeper(node, key)
-    #     else:
-    #         if len(node.values) <= 2:
-    #             return self.getNode(node.values[1], key)
-    #         else:
-    #             return self.go_deeper(node, key)
