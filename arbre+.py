@@ -7,7 +7,7 @@ from Node import Node
 def main():
     bplustree = BPlusTree()
 
-    random_list = bplustree.generateNumber(1)
+    random_list = bplustree.generateNumber(2)
 
 
     print()
@@ -17,6 +17,9 @@ def main():
         #print('Insert ' + str(i))
         
     bplustree.show()
+    graph_yml = open('graph.yml', 'w')
+    bplustree.show_yaml(file=graph_yml)
+    graph_yml.close()
 
     
     #print(list_element)
@@ -27,14 +30,22 @@ def main():
        # bplustree.show()
 
     
-    val = 500
+    val = 22
     print()
     print()
     #print(bplustree.root.values[1].values[2].keys)
     #print(len(bplustree.root.keys))
     print()
-    node= bplustree.search( val)
+    cpt,node= bplustree.search( val)
+    if node == None:
+        cpt=0
+    ok, cpteur, leaves = bplustree.search_range(8,16)
     print(node)
+    print(cpt)
+    print()
+    for leaf in leaves:
+        print(leaf.keys)
+    
     #print(cpt)
     #if val in node.keys:
        # for i in node.parent.keys:

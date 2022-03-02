@@ -24,7 +24,7 @@ class Node(object):
         :type key: str
         """
         for i, item in enumerate(self.keys):
-            if key < item:
+            if key <= item:
                 return i
 
         return len(self.keys)

@@ -1,8 +1,10 @@
-from asyncio.windows_events import NULL
-from genericpath import exists
-from pickle import FALSE
+
+
+
 import random
-from webbrowser import get
+
+from sqlalchemy import null
+
 from Node import Node
 from Node import splits
 from Node import parent_fusions
@@ -67,16 +69,45 @@ class BPlusTree(object):
             leaf[key] = value
             return True, leaf
     
+    def search_range(self, start, end):
+                
+                cpt = 0
+                node = self.root
+                leaves: list[Node] = []
+
+                while type(node) is not Leaf:
+                    cpt += 1
+                    leaves.append(node)
+                    node = node[start]
+
+                if start not in node.keys:
+                    return False, 0, []
+                else:
+                    while True:
+                        leaves.append(node)
+                        cpt += 1
+                        if (end in node.keys) or (node.next is None):
+                            break
+                        else:
+                            node = node.next
+
+                    if end not in node.keys:
+                        return False, 0, []
+                    else:
+                        return True, cpt, leaves
+
     def search(self, key):
+        
+        cpt = 0
         node = self.root
+        cpt += 1
         while type(node) is not Leaf:
+            cpt += 1
             if key in node.keys:
-                return node.keys
-            
+                return cpt, node.keys
             node = node[key]
-         
-        return node.keys
-    
+
+        return cpt, node.keys if key in node.keys else None
         
     
     def __setitem__(self, key, value, leaf=None):
@@ -92,8 +123,8 @@ class BPlusTree(object):
     def generateNumber(self,fix_seed):
         random.seed(fix_seed)
         list_element = []
-        while(len(list_element)<1000):
-            nbr = random.randint(1,1000)
+        while(len(list_element)<50):
+            nbr = random.randint(1,50)
             if nbr not in list_element :
                 list_element.append(nbr)
         return list_element
@@ -109,7 +140,33 @@ class BPlusTree(object):
         else:
             self.__setitem__(key, value, leaf)
             return True, leaf
-
+    
+    
+   
+    def show_yaml(self, node=None, file=None, _prefix="", _last=True, debut = True):
+        """Afficher les éléments de chaque niveau"""
+        if node is None:
+           
+            node = self.root
+           
+        if type(node.values[0]) is not Leaf:
+            if debut :
+                print("keys_per_block: ", self.maximum, sep="", file=file)
+                print("tree:",sep="", file=file)
+                debut = False
+            print(_prefix, "    - " if type(node) is Leaf else "  keys: ", node.keys, sep="", file=file)
+        else:
+            print(_prefix, "children:" if node == node.parent.values[0] else "", sep="", file=file)
+            print(_prefix, "  - keys: ", node.keys, sep="", file=file)
+            print(_prefix, "    children:", sep="", file=file)
+        _prefix += "  " if _last else "  "
+        if type(node) is Node:
+            
+            # Affiche récursivement les éléments des noeuds enfant (s'ils existent).
+            for i, child in enumerate(node.values):
+                _last = (i == len(node.values) - 1)
+                self.show_yaml(child, file, _prefix, _last, debut)
+            
     def insert_index(self, key, values: list[Node]):
         """Pour un nœud parent et un nœud enfant,
          Insérez les valeurs de l'enfant dans les valeurs du parent."""

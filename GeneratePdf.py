@@ -1,9 +1,14 @@
 from pylatex import Document, Section, Itemize, Enumerate, Description, \
     Command, NoEscape
 
-if __name__ == '__main__':
-    doc = Document()
 
+if __name__ == '__main__':
+    
+    
+    doc = Document( )
+   
+
+    
     # create a bulleted "itemize" list like the below:
     # \begin{itemize}
     #   \item The first item
@@ -17,7 +22,15 @@ if __name__ == '__main__':
             itemize.add_item("the second item")
             itemize.add_item("the third etc")
             # you can append to existing items
-            itemize.append(Command("ldots"))
+            itemize.append(Command("ldots")
+        )
+    
+    
+    with doc.create(Section('"Itemize" enu')):
+        with doc.create(Itemize()) as itemize:
+            itemize.add_item("")
+            itemize.append(Command("lot")
+        )
 
     # create a numbered "enumerate" list like the below:
     # \begin{enumerate}[label=\alph*),start=20]
@@ -31,7 +44,8 @@ if __name__ == '__main__':
                                   options={'start': 20})) as enum:
             enum.add_item("the first item")
             enum.add_item("the second item")
-            enum.add_item(NoEscape("the third etc \\ldots"))
+            enum.add_item(NoEscape(" les hommes the third etc \\ldots"))
+            
 
     # create a labelled "description" list like the below:
     # \begin{description}
