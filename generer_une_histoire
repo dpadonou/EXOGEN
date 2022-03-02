@@ -1,0 +1,55 @@
+import random
+from random import randint
+def get_random_unicode():
+    lecture = "r"
+    ecriture = "w"
+    regex = r"^r|w"
+    commit = "c"
+    variables = ["x","y","z","v","w"]
+    nombre_variables = int(input("Entrer le nombre de variables ?"))
+    nombre_transaction = int(input("Entrer le nombre de Transaction ?"))
+    res = []
+    nbr = nombre_transaction
+    histoire=""
+    if(nombre_variables == 1):
+        for k in range(nombre_transaction):
+            for j in range(nombre_transaction):
+                x = randint(1, nombre_transaction)
+                print(x)
+                lect = f"{lecture}{x}[{variables[0]}]"
+                res.append(lect)
+                y = randint(1, nombre_transaction)
+                ecri = f"{ecriture}{y}[{variables[0]}]"
+                res.append(ecri)
+                com = commit+'1'
+                nbr=nbr-1
+                prendre = [
+                    lect, ecri
+                ]
+            indice_commit = randint(1, nombre_transaction)
+            com = f"{indice_commit}"
+            #controler les commist
+            c = 'c'+com
+            w_remplace = f"w[{com}]"
+            r_remplace = f"r[{com}]"
+            if(histoire.endswith(c)):
+                taille_histoire = len(histoire)
+                histoire = ''.join(random.choice(res) for i in range(nombre_transaction)) + 'c' + com + '' + histoire
+
+                for l in range(taille_histoire,len(histoire)):
+                    histoire.replace(w_remplace,"")
+                    histoire.replace(r_remplace, "")
+            else :
+             histoire = ''.join(random.choice(res) for i in range(nombre_transaction)) + 'c'+com+''+histoire
+
+
+    # Update this to include code point ranges to be sampled
+
+
+    print(histoire)
+
+
+
+if __name__ == '__main__':
+    print('A random string: ')
+    get_random_unicode()
