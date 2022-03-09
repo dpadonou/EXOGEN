@@ -1,0 +1,94 @@
+=>PYTHONTEX#py#default#default#0#code#####21#
+import random
+from BPlusTree import BPlusTree
+from Leaf import Leaf
+from Node import Node
+
+def getRoot():
+	bplustree = BPlusTree()
+	
+	#génération de nombre
+	#modifier le seed (graine) pour changer les nombre l'ordre des nombres générés
+	random_list = bplustree.generateNumber(1)
+	mauvais = bplustree.generateNumber(1)
+
+	#construction de l'arbre
+	for i in random_list:
+		bplustree[i] = str(i)
+	
+	#compter le nombre de noeud distinct pour recuperer une valeur
+	nb,node = bplustree.search(17)
+	trouve, cpteur, leaves = bplustree.search_range(8,16)
+	
+	bplustree.generateGraph("foursov")	
+	
+	root = bplustree.root.keys
+	mystring = ','.join(map(str,root))
+	for i in root :
+		mauvais.remove(i)
+
+	return mystring, random_list , nb, cpteur, mauvais
+
+=>PYTHONTEX#py#default#default#1#c#####286#
+a,b,nb,cpteur,m=getRoot()
+=>PYTHONTEX#py#default#default#2#i#####286#
+b
+=>PYTHONTEX#py#default#default#3#i#####286#
+m[6]
+=>PYTHONTEX#py#default#default#4#i#####286#
+a
+=>PYTHONTEX#py#default#default#5#i#####286#
+m[3]
+=>PYTHONTEX#py#default#default#6#i#####286#
+m[12]
+=>PYTHONTEX#py#default#default#7#i#####286#
+m[2]
+=>PYTHONTEX#py#default#default#8#i#####286#
+m[8]
+=>PYTHONTEX#py#default#default#9#i#####286#
+nb
+=>PYTHONTEX#py#default#default#10#i#####286#
+nb+2
+=>PYTHONTEX#py#default#default#11#i#####286#
+nb-1
+=>PYTHONTEX#py#default#default#12#i#####286#
+nb+2
+=>PYTHONTEX#py#default#default#13#i#####286#
+nb
+=>PYTHONTEX#py#default#default#14#i#####286#
+nb+3
+=>PYTHONTEX#py#default#default#15#i#####286#
+nb-1
+=>PYTHONTEX#py#default#default#16#i#####286#
+cpteur+2
+=>PYTHONTEX#py#default#default#17#i#####286#
+cpteur+4
+=>PYTHONTEX#py#default#default#18#i#####286#
+cpteur -1
+=>PYTHONTEX#py#default#default#19#i#####286#
+cpteur
+=>PYTHONTEX:SETTINGS#
+version=0.18
+outputdir=pythontex-files-untitle
+workingdir=.
+workingdirset=false
+gobble=none
+rerun=default
+hashdependencies=default
+makestderr=false
+stderrfilename=full
+keeptemps=none
+pyfuture=default
+pyconfuture=none
+pygments=true
+pygglobal=:GLOBAL||
+fvextfile=-1
+pyconbanner=none
+pyconfilename=stdin
+depythontex=false
+pygfamily=py|python3|
+pygfamily=pycon|pycon|
+pygfamily=sympy|python3|
+pygfamily=sympycon|pycon|
+pygfamily=pylab|python3|
+pygfamily=pylabcon|pycon|

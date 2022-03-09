@@ -1,6 +1,7 @@
 
 # for demo test
 
+import os
 from BPlusTree import BPlusTree
 from Leaf import Leaf
 from Node import Node
@@ -45,6 +46,9 @@ def main():
     print()
     for leaf in leaves:
         print(leaf.keys)
+    
+    name="graph.yml"
+    os.system('cmd /c "python ./btree.py ./"'+name+'" | dot -Tsvg > tree.svg"')
     
     #print(cpt)
     #if val in node.keys:

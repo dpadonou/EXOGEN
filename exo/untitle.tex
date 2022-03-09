@@ -1,0 +1,289 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[bloc,completemulti,nowatermark]{automultiplechoice}    
+\usepackage{multicol}
+\usepackage{moreverb}
+
+% Appel du package pythontex 
+\usepackage{pythontex}
+%
+
+
+
+
+\begin{document}
+
+\begin{pycode}
+import random
+from BPlusTree import BPlusTree
+from Leaf import Leaf
+from Node import Node
+
+def getRoot():
+	bplustree = BPlusTree()
+	
+	#génération de nombre 
+	#modifier le seed (graine) pour changer les nombre l'ordre des nombres générés
+	random_list = bplustree.generateNumber(1)
+	mauvais = bplustree.generateNumber(1)
+
+	#construction de l'arbre
+	for i in random_list:
+		bplustree[i] = str(i)
+	
+	#compter le nombre de noeud distinct pour recuperer une valeur
+	nb,node = bplustree.search(17)
+	trouve, cpteur, leaves = bplustree.search_range(8,16)
+	
+	bplustree.generateGraph("foursov")	
+	
+	root = bplustree.root.keys
+	mystring = ','.join(map(str,root))
+	for i in root :
+		mauvais.remove(i)
+    
+	return mystring, random_list , nb, cpteur, mauvais
+
+\end{pycode}
+
+
+\AMCrandomseed{1237893}
+
+\element{amc}{
+  \begin{questionmult}{creation-arbre}\bareme{mz=2}
+Construire un arbre B+ d'ordre 2 (donc au plus 4 éléments par noeud), au fur et à mesure des insertions suivantes :
+\pyc{a,b,nb,cpteur,m=getRoot()}
+$$\py{b}$$
+
+Que contient la racine de cet arbre à la fin de ces insertions?
+    \begin{multicols}{2}
+      \begin{reponses}
+        \bonne{\py{a}}
+        \mauvaise{\py{m[3]}}
+        \mauvaise{\py{m[6]}}
+        \mauvaise{\py{m[12]},\py{m[2]},\py{m[8]}}
+\end{reponses}
+    \end{multicols}
+  \end{questionmult}
+}
+
+\element{amc}{
+\begin{question}{dessin-arbre}
+  Dessinez l'arbre B+ \textbf{final} ci-dessous (ne \textbf{pas} cocher les cases f, p, j ci-contre)
+  \AMCOpen{lines=7, dots=false}{\wrongchoice[F]{f}\scoring{0}\wrongchoice[P]{p}\scoring{0}\correctchoice[J]{j}\scoring{0}}
+\end{question}
+}
+
+\element{amc}{
+  \begin{questionmult}{acces-noeud}\bareme{mz=3}
+On suppose que les n-uplets sont stockés aux feuilles de l'arbre B+. Combien faut-il lire  de pages disque distinctes (donc, ne pas compter deux fois la même page) pour
+rechercher l'élément 17  ?
+    \begin{multicols}{2}
+      \begin{reponses}
+        \bonne{\py{nb}}
+        \mauvaise{\py{nb+2}}
+        \mauvaise{\py{nb-1}}
+        \mauvaise{Aucune}
+      \end{reponses}
+    \end{multicols}
+  \end{questionmult}
+}
+
+\element{amc}{
+  \begin{questionmult}{acces-noeud-2}\bareme{mz=3}
+De même, combien faut-il lire de pages disque distinctes pour tester la présence de l'élément 21 ?
+    \begin{multicols}{2}
+      \begin{reponses}
+        \bonne{\py{nb}}
+        \mauvaise{\py{nb+2}}
+        \mauvaise{\py{nb-1}}
+        \mauvaise{\py{nb+3}}
+      \end{reponses}
+    \end{multicols}
+  \end{questionmult}
+}
+
+\element{amc}{
+  \begin{questionmult}{acces-noeud-3}\bareme{mz=3}
+De même, combien faut-il lire de pages disque distinctes pour accéder aux n-uplets de l'intervalle $[8,16]$ ?
+    \begin{multicols}{2}
+      \begin{reponses}
+        \bonne{\py{cpteur}}
+        \mauvaise{\py{cpteur+2}}
+        \mauvaise{\py{cpteur+4}}
+        \mauvaise{\py{cpteur -1}}
+      \end{reponses}
+    \end{multicols}
+  \end{questionmult}
+}
+
+\element{amc}{
+  \begin{questionmult}{plan-1}\bareme{mz=3}
+On observe le plan d'exécution suivant :\\
+
+{\tt
+SELECT STATEMENT\\
+|  1 |     TABLE ACCESS BY INDEX ROWID\\
+|  2 |     ..... INDEX UNIQUE SCAN\\
+}
+
+
+Quelle est la requête SQL pouvant donner ce plan ?
+%    \begin{multicols}{2}
+      \begin{reponses}
+        \bonne{select * from Client where Client.id=1254}
+        \mauvaise{select * from Client, Commande where Client.id=Commande.id and Client.id=5}
+        \mauvaise{select * from Client where Client.id < 5}
+        \mauvaise{select index from access where index='unique'}
+      \end{reponses}
+%    \end{multicols}
+  \end{questionmult}
+}
+
+\element{amc}{
+  \begin{questionmult}{plan-2}\bareme{mz=3}
+On observe le plan d'exécution suivant :\\
+
+{\tt
+SELECT STATEMENT\\
+|  1 |	MERGE JOIN\\
+|  2 |  .....SORT JOIN\\
+|  3 |  ..........TABLE ACCESS FULL\\
+|  4 |  .....SORT JOIN\\
+|  5 |  ...............NESTED LOOP\\
+|  6 |  ..................... TABLE ACCESS FULL\\
+|  7 |  ..................... TABLE ACCESS FULL\\
+}
+
+
+Quelle est la requête SQL pouvant donner ce plan ?
+%    \begin{multicols}{2}
+      \begin{reponses}
+        \mauvaise{select nom from Client order by montant asc}
+        \mauvaise{select full from nested1, nested2 where loop is not null}
+        \bonne{select * from Client, Commande, Produit where Client.id=Commande.cid and Commande.pid=Produit.id}
+        \mauvaise{select * from Client natural join Commande where Commande.id=513}
+      \end{reponses}
+%    \end{multicols}
+  \end{questionmult}
+}
+
+\element{amc}{
+  \begin{question}{serialisabilite}\bareme{mz=3}
+
+Soit l'histoire suivante reçue par un ordonnanceur :
+$$
+r_2[y]r_1[y]w_1[x]r_3[x]w_2[y]r_3[x]r_1[y]r_1[z]c_1w_2[z]w_3[x]c_3c_2
+$$
+
+ Cette histoire est-elle sérialisable ?
+ 
+      \begin{reponses}
+        \mauvaise{oui}
+        \bonne{non}
+      \end{reponses}
+
+  \end{question}
+}
+
+\element{amc}{
+  \begin{questionmult}{recouvrabilite}\bareme{mz=3}
+
+ Cette histoire est :
+ 
+      \begin{reponses}
+        \mauvaise{recouvrable, évitant les annulations en cascade et stricte}
+        \mauvaise{recouvrable, évitant les annulations en cascade mais pas stricte}
+        \bonne{pas recouvrable}
+        \mauvaise{stricte mais pas recouvrable}
+      \end{reponses}
+  \end{questionmult}
+}
+
+
+\element{amc}{
+  \begin{questionmult}{tpl}\bareme{mz=3}
+
+Laquelle des histoires suivantes correspond à l'exécution effective de cette histoire selon l'algorithme de verrouillage à 2 phases (selon la définition vue en cours : sous-verrous
+en lecture partageable et sous-verrous en écriture exclusif, relâchement de tous les verrous lors du \textit{commit}, redémarrage des transactions bloquées dans l'ordre FIFO).
+ 
+      \begin{reponses}
+        \mauvaise{$r_2[y]r_1[y]w_1[x]r_3[x]r_3[x]w_1[y]w_2[y]r_1[z]c_1w_2[z]w_3[x]c_3c_2$}
+        \bonne{$r_2[y]r_1[y]w_1[x]r_1[y]r_1[z]c_1 r_3[x]w_2[y]r_3[x]w_2[z]w_3[x]c_3c_2$}
+        \mauvaise{$r_2[y]r_1[y]w_1[x]w_2[y]r_3[x]w_1[y]r_3[x]r_1[z]c_1w_2[z]w_3[x]c_3c_2$}
+      \end{reponses}
+  \end{questionmult}
+}
+
+
+\element{amc}{
+\begin{question}{preuve}
+  Expliquez pourquoi, si une histoire n'est pas recouvrable, alors elle sera nécessairement modifiée par l'algorithme de verrouillage à deux phases. 
+  \AMCOpen{lines=5, dots=false}{\wrongchoice[F]{f}\scoring{0}\wrongchoice[P]{p}\scoring{1}\correctchoice[J]{j}\scoring{4}}
+\end{question}
+}
+
+
+
+
+\exemplaire{1}{    
+
+%%% debut de l'en-tête des copies :    
+
+%\noindent{\bf Classe d'application d'AMC  \hfill Examen du 01/01/2010}
+\begin{center}
+{\Large L3 Miage Bases de données}\\
+Durée 2h -- documents de CM/TD/TP et dictionnaire bilingue autorisés\\
+\end{center}
+
+
+\vspace{2ex}
+
+\noindent\AMCcode{etu}{8}\hspace*{\fill}
+\begin{minipage}{.5\linewidth}
+$\longleftarrow{}$ codez votre numéro d'étudiant ci-contre, et écrivez votre nom et prénom ci-dessous.
+
+\vspace{3ex}
+
+\champnom{\fbox{    
+    \begin{minipage}{.9\linewidth}
+      Nom et prénom :
+      
+      \vspace*{.5cm}\dotfill
+      \vspace*{1mm}
+    \end{minipage}
+  }}\end{minipage}
+
+\vspace{1ex}
+
+
+
+\noindent\hrulefill
+
+\vspace{2ex}
+
+\begin{center}
+  Les questions faisant apparaître le symbole \multiSymbole{} peuvent
+  présenter zéro, une ou plusieurs bonnes réponses. Les autres ont une
+  unique bonne réponse.
+\end{center}
+
+\noindent\hrulefill
+
+\vspace{2ex}
+%%% fin de l'en-tête
+
+%\melangegroupe{amc}
+\restituegroupe{amc}
+
+%\clearpage    
+
+}   
+
+
+\end{document}
