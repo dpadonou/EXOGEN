@@ -1,16 +1,17 @@
 # for demo test
 
-from Arbre import Arbre
-from utils.Util import askVals
-from utils.Util import generateNumber
+from Tree import Tree
+from utils.Util import ask_vals
+from utils.Util import generate_number
+from utils.Util import generate_image
 
 
 def main():
-    tree = Arbre()
+    tree = Tree()
 
-    seedVal = askVals("Facteur de génération")
-    maxNbr = askVals("Nombre d'éléments")
-    random_list = generateNumber(seedVal, maxNbr)
+    seedVal = ask_vals("Facteur de génération")
+    maxNbr = ask_vals("Nombre d'éléments")
+    random_list = generate_number(seedVal, maxNbr)
 
     print("=================================== Generated values =====================================")
     print(random_list)
@@ -20,21 +21,30 @@ def main():
 
     for i in random_list:
         tree[i] = 'test' + str(i)
-        # print('Insert ' + str(i))
-    graph = open('graph.txt', 'w')
-    tree.show(file=graph)
+        # print('Insert ' + str(operation))
+    graph = open('../export/graph.txt', 'w')
+    tree.show()
     graph.close()
 
+    print()
+    print()
+    graph_yml = open('../export/graph.yml', 'w')
+    tree.show_yaml(file=graph_yml)
+    graph_yml.close()
+
+    generate_image()
 
     # print(bplustree.root.values[1].values[2].keys)
     # print(len(bplustree.root.keys))
 
     # print()
-    # node = tree.find(7)
+    # node = tree.find(5)
     # print(node.keys)
-    #
+    # cpt, leaves = tree.search(5)
+    # print(leaves)
+
     # print()
-    # ok, cpt, leaves = tree.search_range(12, 37)
+    # ok, cpt, leaves = tree.search_range(12, 27)
     # print(ok)
     # print(cpt)
     # for leaf in leaves:
@@ -42,9 +52,9 @@ def main():
 
     # print(list_element)
     # random.shuffle(random_list)
-    # for i in random_list:
-    # print('Delete ' + str(i))
-    # bplustree.delete(i)
+    # for operation in random_list:
+    # print('Delete ' + str(operation))
+    # bplustree.delete(operation)
     # bplustree.show()
 
 

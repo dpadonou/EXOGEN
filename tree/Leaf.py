@@ -1,22 +1,22 @@
-from Noeud import Noeud
+from Node import Node
 
 
 global splits
 splits = 0
 
 
-class Feuille(Noeud):
+class Leaf(Node):
     def __init__(self, parent=None, prev_node=None, next_node=None):
         """
         Créer une nouvelle feuille
-        :type prev_node: Feuille (Noeud gauche)
-        :type next_node: Feuille (Noeud droite)
+        :type prev_node: Leaf (Node gauche)
+        :type next_node: Leaf (Node droite)
         """
-        super(Feuille, self).__init__(parent)
-        self.next: Feuille = next_node
+        super(Leaf, self).__init__(parent)
+        self.next: Leaf = next_node
         if next_node is not None:
             next_node.prev = self
-        self.prev: Feuille = prev_node
+        self.prev: Leaf = prev_node
         if prev_node is not None:
             prev_node.next = self
 
@@ -35,7 +35,7 @@ class Feuille(Noeud):
         global splits
         splits += 1
 
-        left = Feuille(self.parent, self.prev, self)
+        left = Leaf(self.parent, self.prev, self)
         mid = len(self.keys) // 2
 
         left.keys = self.keys[:mid+1]

@@ -1,8 +1,9 @@
+import os
 import random
 from typing import List
 
 
-def generateNumber(fix_seed, max_elem):
+def generate_number(fix_seed, max_elem):
     random.seed(fix_seed)
     list_element: List[int] = []
     while len(list_element) < max_elem:
@@ -12,7 +13,7 @@ def generateNumber(fix_seed, max_elem):
     return list_element
 
 
-def askVals(text):
+def ask_vals(text):
     val = input(text + ": ")
     ok = False
     while not ok:
@@ -23,6 +24,10 @@ def askVals(text):
             val = input(text + ": ")
         else:
             return int_val
+
+
+def generate_image():
+    os.system('cmd /c "python ./export/btree.py ./export/graph.yml | dot -Tsvg > ./export/graph.svg"')
 
 
 def askOption():
