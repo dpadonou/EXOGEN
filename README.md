@@ -30,20 +30,24 @@
 
 ### Ajouter une commande utilisateur à TexMaker pour gérer les pdf
     
-Etapes à suivre :
-![alt text](https://github.com/[username]/[reponame]/blob/[branch]/image.jpg?raw=true)
+![Ajouter une commande dans TexMaker etape 1](https://gitlab.istic.univ-rennes1.fr/dpadonou/exogen/-/blob/master/help/1.png?raw=true)
+
+![Ajouter une commande dans TexMaker etape 2](https://gitlab.istic.univ-rennes1.fr/dpadonou/exogen/-/blob/master/help/2.png?raw=true)
+
+Ajouter la commande suivante dans la boîte de dialogue: (_Veillez à adapter les chemins d'accès aux spécificités de l'environnement de l'utilisateur._)
+
+    `pdflatex --shell-escape -synctex=1 -interaction=nonstopmode %.tex|C:\Users\dieu-\AppData\Local\Programs\Python\Python310\python.exe "C:\Users\dieu-\AppData\Local\Programs\MiKTeX\scripts\pythontex\pythontex.py" %.tex|pdflatex --shell-escape -synctex=1 -interaction=nonstopmode %.tex|"C:\Program Files (x86)\Adobe\Acrobat DC\Acrobat\Acrobat.exe" %.pdf`
+
+
+![Ajouter une commande dans TexMaker etape 3](https://gitlab.istic.univ-rennes1.fr/dpadonou/exogen/-/blob/master/help/3.png?raw=true)
 
 ## Démarrage
 
+Exécuter le script Latex avec le bouton d'exécution juste à gauche de la commande que vous avez sélectionner à l'étape précédente.
 
 ## Versions
 
 **Dernière version stable :** Sur la branche **Master**
-
-## Test
-
-
-### Postman :
 
     
 ## Auteurs
@@ -54,7 +58,5 @@ Etapes à suivre :
 * **CAMARA Jacob N'Kong**
 
 ## License
-
-[![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
 
 [![forthebadge](https://forthebadge.com/images/badges/open-source.svg)](https://forthebadge.com)
