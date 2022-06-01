@@ -1,10 +1,14 @@
-global splits 
+from typing import List
+
+global splits
 splits = 0
-global parent_fusions 
+global parent_fusions
 parent_fusions = 0
-global fusions 
+global fusions
 fusions = 0
 parent_splits = 0
+
+
 class Node(object):
     """Base node object. It should be index node
     Each node stores keys and children.
@@ -16,7 +20,7 @@ class Node(object):
         """Child nodes are stored in values. Parent nodes simply act as a medium to traverse the tree.
         :type parent: Node"""
         self.keys: list = []
-        self.values: list[Node] = []
+        self.values: List[Node] = []
         self.parent: Node = parent
 
     def index(self, key):
@@ -24,7 +28,7 @@ class Node(object):
         :type key: str
         """
         for i, item in enumerate(self.keys):
-            if key < item:
+            if key <= item:
                 return i
 
         return len(self.keys)
@@ -41,7 +45,7 @@ class Node(object):
     def split(self):
         """Splits the node into two and stores them as child nodes.
         extraire un pivot de l'enfant à insérer dans les clés du parent.
-        
+
         @:retourne la clé et deux enfants
         """
         global splits, parent_splits
@@ -60,7 +64,7 @@ class Node(object):
         key = self.keys[mid]
         self.keys = self.keys[mid + 1:]
         self.values = self.values[mid + 1:]
-
+        # print("splits-Node:", splits)
         return key, [left, self]
 
     def __delitem__(self, key):
@@ -77,14 +81,14 @@ class Node(object):
         parent_fusions += 1
 
         index = self.parent.index(self.keys[0])
-        # Fusionner ce Noeud avec le Noeud suivant
+        # Fusionner ce Node avec le Node suivant
         if index < len(self.parent.keys):
             next_node: Node = self.parent.values[index + 1]
             next_node.keys[0:0] = self.keys + [self.parent.keys[index]]
             for child in self.values:
                 child.parent = next_node
             next_node.values[0:0] = self.values
-        else:  # Si self est le dernier Noeud alors fusionner avec prev
+        else:  # Si self est le dernier Node alors fusionner avec prev
             prev: Node = self.parent.values[-2]
             prev.keys += [self.parent.keys[-1]] + self.keys
             for child in self.values:

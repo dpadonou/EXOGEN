@@ -1,17 +1,27 @@
+from typing import List
+
+from Leaf import Leaf
 from Node import Node
-from Node import splits
+from Node import fusions
 from Node import parent_fusions
 from Node import parent_splits
-from Node import fusions
-from Leaf import Leaf
-class BPlusTree(object):
-    
-    """ Un objet B+ constitué de Noeuds 
+from Node import splits
+
+global compteur
+compteur = 0
+global j
+j = -1
+global lp
+lp = None
+
+
+class Tree(object):
+    """ Un objet B+ constitué de Noeuds
     Un noeud est automatiquement divisé en deux dès qu'il est rempli (Nombre d'éléments supérieur à maximum). 
     Quand un découpage se produit, on envoie l'élément du milieu vers le haut (dans le noeud parent) pour servir de pivot.
 
     Returns:
-         maximum (int): Le nombre maximum d'éléments que chaque Noeud peut comporter.
+         maximum (int): Le nombre maximum d'éléments que chaque Node peut comporter.
     """
     root: Node
 
@@ -21,14 +31,14 @@ class BPlusTree(object):
         self.minimum: int = self.maximum // 2
         self.depth = 0
 
-
     """ retrouver une feuille
         Retourne:
         Leaf: la feuille qui comtient la clé (key)
     """
+
     def find(self, key) -> Leaf:
         node = self.root
-        
+
         # Parcours l'arbre jusqu'à retrouver la clé.
         while type(node) is not Leaf:
             node = node[key]
@@ -46,7 +56,7 @@ class BPlusTree(object):
     def change(self, key, value):
         """change la valeur
         Returns:
-         (bool,Leaf): la feuille où se trouve la clé, retourne false si la clé n'existe pas 
+         (bool,Leaf): la feuille où se trouve la clé, retourne false si la clé n'existe pas
         """
         leaf = self.find(key)
         if key not in leaf.keys:
@@ -77,7 +87,7 @@ class BPlusTree(object):
             self.__setitem__(key, value, leaf)
             return True, leaf
 
-    def insert_index(self, key, values: list[Node]):
+    def insert_index(self, key, values: List[Node]):
         """Pour un nœud parent et un nœud enfant,
          Insérez les valeurs de l'enfant dans les valeurs du parent."""
         parent = values[1].parent
@@ -112,23 +122,23 @@ class BPlusTree(object):
                 node.fusion()
                 self.delete(key, node.parent)
         # Change the left-most key in node
-        # if i == 0:
+        # if operation == 0:
         #     node = self
-        #     while i == 0:
+        #     while operation == 0:
         #         if node.parent is None:
         #             if len(node.keys) > 0 and node.keys[0] == key:
         #                 node.keys[0] = self.keys[0]
         #             return
         #         node = node.parent
-        #         i = node.index(key)
+        #         operation = node.index(key)
         #
-        #     node.keys[i - 1] = self.keys[0]
+        #     node.keys[operation - 1] = self.keys[0]
 
     def show(self, node=None, file=None, _prefix="", _last=True):
         """Afficher les éléments de chaque niveau"""
         if node is None:
             node = self.root
-        print(_prefix, "`- " if _last else "|- ", node.keys, sep="", file=file)
+        print(_prefix, "\- " if _last else "|- ", node.keys, sep="", file=file)
         _prefix += "   " if _last else "|  "
 
         if type(node) is Node:
@@ -136,6 +146,30 @@ class BPlusTree(object):
             for i, child in enumerate(node.values):
                 _last = (i == len(node.values) - 1)
                 self.show(child, file, _prefix, _last)
+
+    def show_yaml(self, node=None, file=None, _prefix="", _last=True, debut=True):
+        """Afficher les éléments de chaque niveau"""
+        if node is None:
+            node = self.root
+
+        if type(node.values[0]) is not Leaf:
+            if debut:
+                print("keys_per_block: ", self.maximum, sep="", file=file)
+                print("tree:", sep="", file=file)
+                debut = False
+            print(_prefix, "    - " if type(node) is Leaf else "  keys: ", node.keys, sep="", file=file)
+        else:
+            if node == node.parent.values[0]:
+                print(_prefix, "children:", sep="", file=file)
+            print(_prefix, "  - keys: ", node.keys, sep="", file=file)
+            print(_prefix, "    children:", sep="", file=file)
+        _prefix += "  " if _last else "  "
+        if type(node) is Node:
+
+            # Affiche récursivement les éléments des noeuds enfant (s'ils existent).
+            for i, child in enumerate(node.values):
+                _last = (i == len(node.values) - 1)
+                self.show_yaml(child, file, _prefix, _last, debut)
 
     def output(self):
         return splits, parent_splits, fusions, parent_fusions, self.depth
@@ -154,3 +188,42 @@ class BPlusTree(object):
         while type(node) is not Leaf:
             node = node.values[0]
         return node
+
+    def search_range(self, start, end):
+        global compteur
+        compteur = 0
+        node = self.root
+        leaves: list[Node] = []
+
+        while type(node) is not Leaf:
+            compteur += 1
+            leaves.append(node)
+            node = node[start]
+
+        if start not in node.keys:
+            return False, 0, []
+        else:
+            while True:
+                leaves.append(node)
+                compteur += 1
+                if (end in node.keys) or (node.next is None):
+                    break
+                else:
+                    node = node.next
+
+            if end not in node.keys:
+                return False, 0, []
+            else:
+                return True, compteur, leaves
+
+    def search(self, key):
+        global compteur
+        compteur += 1
+        node = self.root
+        while type(node) is not Leaf:
+            compteur += 1
+            if key in node.keys:
+                return compteur, node.keys
+            node = node[key]
+
+        return compteur, node.keys if key in node.keys else None

@@ -1,13 +1,15 @@
-
-from Node import fusions
-from Node import splits
 from Node import Node
+
+global splits
+splits = 0
+
+
 class Leaf(Node):
     def __init__(self, parent=None, prev_node=None, next_node=None):
         """
         Créer une nouvelle feuille
-        :type prev_node: Leaf (Noeud gauche)
-        :type next_node: Leaf (Noeud droite)
+        :type prev_node: Leaf (Node gauche)
+        :type next_node: Leaf (Node droite)
         """
         super(Leaf, self).__init__(parent)
         self.next: Leaf = next_node
@@ -35,14 +37,14 @@ class Leaf(Node):
         left = Leaf(self.parent, self.prev, self)
         mid = len(self.keys) // 2
 
-        left.keys = self.keys[:mid]
-        left.values = self.values[:mid]
+        left.keys = self.keys[:mid + 1]
+        left.values = self.values[:mid + 1]
 
-        self.keys: list = self.keys[mid:]
-        self.values: list = self.values[mid:]
-        
+        self.keys: list = self.keys[mid + 1:]
+        self.values: list = self.values[mid + 1:]
+
         # Lorsque le nœud feuille est divisé, définissez la clé parent à la clé la plus à gauche du nœud enfant droit.
-        return self.keys[0], [left, self]
+        return left.keys[-1], [left, self]
 
     def __delitem__(self, key):
         i = self.keys.index(key)
