@@ -1,20 +1,17 @@
 import collections
-import copy
 
-from Story import Story
 from Operation import Operation
 
 
 def main():
-    op_list = [Operation('r', 1, 'x'), Operation('w', 1, 'y'), Operation('r', 2, 'y'), Operation('c', 1, None),
-               Operation('c', 2, None), Operation('W', 2, 'x')]
+    op_list = [Operation('r', 1, 'x'), Operation('w', 1, 'y'), Operation('r', 2, 'y'), Operation('c', 1, None), Operation('c', 2, None), Operation('W', 2, 'x')]
 
     copy_list = op_list.copy()
     print('op_list:', op_list)
     print()
     print('copy_list:', copy_list)
 
-    op_list.pop()
+    copy_list.pop()
     print()
     print()
     print('op_list:', op_list)

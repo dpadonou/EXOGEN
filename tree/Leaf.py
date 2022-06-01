@@ -1,6 +1,5 @@
 from Node import Node
 
-
 global splits
 splits = 0
 
@@ -38,11 +37,11 @@ class Leaf(Node):
         left = Leaf(self.parent, self.prev, self)
         mid = len(self.keys) // 2
 
-        left.keys = self.keys[:mid+1]
-        left.values = self.values[:mid+1]
+        left.keys = self.keys[:mid + 1]
+        left.values = self.values[:mid + 1]
 
-        self.keys: list = self.keys[mid+1:]
-        self.values: list = self.values[mid+1:]
+        self.keys: list = self.keys[mid + 1:]
+        self.values: list = self.values[mid + 1:]
 
         # Lorsque le nœud feuille est divisé, définissez la clé parent à la clé la plus à gauche du nœud enfant droit.
         return left.keys[-1], [left, self]

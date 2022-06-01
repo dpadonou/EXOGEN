@@ -1,0 +1,337 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[bloc,completemulti,nowatermark]{automultiplechoice}    
+\usepackage{multicol}
+\usepackage{moreverb}
+
+% Appel du package pythontex 
+\usepackage{pythontex}
+%
+
+\begin{document}
+\begin{pycode}
+
+import random
+import Util
+from Tree import Tree
+from Story import Story
+import copy
+def resolve():
+	tree = Tree()
+	
+	#modifier le seed (graine) pour changer les nombre l'ordre des nombres générés
+	vals = Util.generate_number(1, 20)
+	_vals = Util.generate_number(1,20)
+	
+	#suppression des crochets
+	__vals = ",".join(map(str, vals))
+	
+	
+	#construction de l'arbre
+	for i in vals:
+		tree[i] = str(i)
+		
+	#generation du graphe
+	#tree.generateGraph("graph")
+	
+	
+	#recupperer le root
+	root = tree.root.keys
+	_root = ','.join(map(str,root))
+	for i in root :
+		_vals.remove(i)
+	
+	#compter le nombre de noeud distinct pour recuperer une valeur
+	nb,node = tree.search(17)
+	_nb = Util.generate_number(nb, 5)
+	
+	#supprimer le nombre noeud si existant dans liste generée
+	if nb in _nb :
+		_nb.remove(nb)
+		
+		
+	#compter le nombre de noeud distinct pour recuperer une valeur
+	nmb,node = tree.search(21)
+	_nmb = Util.generate_number(nmb, 5)
+	
+	#supprimer le nombre noeud si existant dans liste generée
+	if nmb in _nmb :
+		_nmb.remove(nmb)
+		
+	#compter le nombre de noeud distinct pour recuperer les valeurs de l'intervalle
+	trouve, inter_val, leaves = tree.search_range(8,16)
+	_inter_val = Util.generate_number(inter_val, 7)
+	
+	#supprimer le nombre noeud si existant dans liste generée
+	if inter_val in _inter_val:
+		_inter_val.remove(inter_val)
+	
+	#generation de l'histoire
+	hist = Story(15, 3, 3, True, 'NR')
+	list_hist = []
+	_sol = []
+	for operation in hist.operations:
+		list_hist.append(operation.show())
+	lt = " ".join(map(str, list_hist))
+	
+	sol, at=hist.solve_history()
+	for op in sol:
+		_sol.append(op.show())
+	__sol = " ".join(map(str,_sol))
+	
+	
+	cp=copy.deepcopy(sol)
+	i_, j_ = Util.random_choice(cp)
+	cp_=Util.swap_elmts(cp, i_, j_)
+	_cp_=Util.display(cp_)
+	
+	_cp=copy.deepcopy(sol)
+	i1, i2 = Util.random_choice(_cp)
+	_cp__=Util.swap_elmts(_cp, i1, i2)
+	__cp=Util.display(_cp__)
+
+	return __vals,nb,_nb,inter_val, _inter_val, nmb, _nmb,_root,_vals,lt, __sol, _cp_,__cp
+	
+
+\end{pycode}
+\AMCrandomseed{1237893}
+
+\element{amc}{
+  \begin{questionmult}{creation-arbre}\bareme{mz=2}
+Construire un arbre B+ d'ordre 2 (donc au plus 4 éléments par noeud), au fur et à mesure des insertions suivantes :
+
+\pyc{vals,nb,_nb,inter_val, _inter_val, nmb, _nmb, _root,_vals,lt, __sol, i, j=resolve()}
+$$\py{vals}$$
+
+Que contient la racine de cet arbre à la fin de ces insertions?
+    \begin{multicols}{2}
+      \begin{reponses}
+        \bonne{\py{_root}}
+        \mauvaise{\py{_vals[1]}}
+        \mauvaise{\py{_vals[7]}}
+        \mauvaise{\py{_vals[9]},\py{_vals[4]},\py{_vals[5]}}
+\end{reponses}
+    \end{multicols}
+  \end{questionmult}
+}
+
+\element{amc}{
+\begin{question}{dessin-arbre}
+  Dessinez l'arbre B+ \textbf{final} ci-dessous (ne \textbf{pas} cocher les cases f, p, j ci-contre)
+  \AMCOpen{lines=7, dots=false}{\wrongchoice[F]{f}\scoring{0}\wrongchoice[P]{p}\scoring{0}\correctchoice[J]{j}\scoring{0}}
+\end{question}
+}
+
+\element{amc}{
+  \begin{questionmult}{acces-noeud}\bareme{mz=3}
+On suppose que les n-uplets sont stockés aux feuilles de l'arbre B+. Combien faut-il lire  de pages disque distinctes (donc, ne pas compter deux fois la même page) pour
+rechercher l'élément 17  ?
+    \begin{multicols}{2}
+      \begin{reponses}
+        \bonne{\py{nb}}
+        \mauvaise{\py{_nb[1]}}
+        \mauvaise{\py{_nb[3]}}
+        \mauvaise{Aucune}
+      \end{reponses}
+    \end{multicols}
+  \end{questionmult}
+}
+
+\element{amc}{
+  \begin{questionmult}{acces-noeud-2}\bareme{mz=3}
+De même, combien faut-il lire de pages disque distinctes pour tester la présence de l'élément 21 ?
+    \begin{multicols}{2}
+      \begin{reponses}
+        \bonne{\py{nmb}}
+        \mauvaise{\py{_nmb[0]}}
+        \mauvaise{\py{_nmb[2]}}
+        \mauvaise{\py{_nmb[1]}}
+      \end{reponses}
+    \end{multicols}
+  \end{questionmult}
+}
+
+\element{amc}{
+  \begin{questionmult}{acces-noeud-3}\bareme{mz=3}
+De même, combien faut-il lire de pages disque distinctes pour accéder aux n-uplets de l'intervalle $[8,16]$ ?
+    \begin{multicols}{2}
+      \begin{reponses}
+        \bonne{\py{inter_val}}
+        \mauvaise{\py{_inter_val[0]}}
+        \mauvaise{\py{_inter_val[4]}}
+        \mauvaise{\py{_inter_val[1]}}
+      \end{reponses}
+    \end{multicols}
+  \end{questionmult}
+}
+
+\element{amc}{
+  \begin{questionmult}{plan-1}\bareme{mz=3}
+On observe le plan d'exécution suivant :\\
+
+{\tt
+SELECT STATEMENT\\
+|  1 |     TABLE ACCESS BY INDEX ROWID\\
+|  2 |     ..... INDEX UNIQUE SCAN\\
+}
+
+
+Quelle est la requête SQL pouvant donner ce plan ?
+%    \begin{multicols}{2}
+      \begin{reponses}
+        \bonne{select * from Client where Client.id=1254}
+        \mauvaise{select * from Client, Commande where Client.id=Commande.id and Client.id=5}
+        \mauvaise{select * from Client where Client.id < 5}
+        \mauvaise{select index from access where index='unique'}
+      \end{reponses}
+%    \end{multicols}
+  \end{questionmult}
+}
+
+\element{amc}{
+  \begin{questionmult}{plan-2}\bareme{mz=3}
+On observe le plan d'exécution suivant :\\
+
+{\tt
+SELECT STATEMENT\\
+|  1 |	MERGE JOIN\\
+|  2 |  .....SORT JOIN\\
+|  3 |  ..........TABLE ACCESS FULL\\
+|  4 |  .....SORT JOIN\\
+|  5 |  ...............NESTED LOOP\\
+|  6 |  ..................... TABLE ACCESS FULL\\
+|  7 |  ..................... TABLE ACCESS FULL\\
+}
+
+
+Quelle est la requête SQL pouvant donner ce plan ?
+%    \begin{multicols}{2}
+      \begin{reponses}
+        \mauvaise{select nom from Client order by montant asc}
+        \mauvaise{select full from nested1, nested2 where loop is not null}
+        \bonne{select * from Client, Commande, Produit where Client.id=Commande.cid and Commande.pid=Produit.id}
+        \mauvaise{select * from Client natural join Commande where Commande.id=513}
+      \end{reponses}
+%    \end{multicols}
+  \end{questionmult}
+}
+
+\element{amc}{
+  \begin{question}{serialisabilite}\bareme{mz=3}
+
+Soit l'histoire suivante reçue par un ordonnanceur :
+$$
+\py{lt}
+$$
+
+ Cette histoire est-elle sérialisable ?
+ 
+      \begin{reponses}
+        \mauvaise{oui}
+        \bonne{non}
+      \end{reponses}
+
+  \end{question}
+}
+
+\element{amc}{
+  \begin{questionmult}{recouvrabilite}\bareme{mz=3}
+
+ Cette histoire est :
+ 
+      \begin{reponses}
+        \mauvaise{recouvrable, évitant les annulations en cascade et stricte}
+        \mauvaise{recouvrable, évitant les annulations en cascade mais pas stricte}
+        \bonne{pas recouvrable}
+        \mauvaise{stricte mais pas recouvrable}
+      \end{reponses}
+  \end{questionmult}
+}
+
+
+\element{amc}{
+  \begin{questionmult}{tpl}\bareme{mz=3}
+
+Laquelle des histoires suivantes correspond à l'exécution effective de cette histoire selon l'algorithme de verrouillage à 2 phases (selon la définition vue en cours : sous-verrous
+en lecture partageable et sous-verrous en écriture exclusif, relâchement de tous les verrous lors du \textit{commit}, redémarrage des transactions bloquées dans l'ordre FIFO).
+ 
+      \begin{reponses}
+        \mauvaise{\py{i}}
+        \bonne{\py{__sol}}
+        \mauvaise{\py{j}}
+      \end{reponses}
+  \end{questionmult}
+}
+
+
+\element{amc}{
+\begin{question}{preuve}
+  Expliquez pourquoi, si une histoire n'est pas recouvrable, alors elle sera nécessairement modifiée par l'algorithme de verrouillage à deux phases. 
+  \AMCOpen{lines=5, dots=false}{\wrongchoice[F]{f}\scoring{0}\wrongchoice[P]{p}\scoring{1}\correctchoice[J]{j}\scoring{4}}
+\end{question}
+}
+
+
+
+
+\exemplaire{1}{    
+
+%%% debut de l'en-tête des copies :    
+
+%\noindent{\bf Classe d'application d'AMC  \hfill Examen du 01/01/2010}
+\begin{center}
+{\Large L3 Miage Bases de données}\\
+Durée 2h -- documents de CM/TD/TP et dictionnaire bilingue autorisés\\
+\end{center}
+
+
+\vspace{2ex}
+
+\noindent\AMCcode{etu}{8}\hspace*{\fill}
+\begin{minipage}{.5\linewidth}
+$\longleftarrow{}$ codez votre numéro d'étudiant ci-contre, et écrivez votre nom et prénom ci-dessous.
+
+\vspace{3ex}
+
+\champnom{\fbox{    
+    \begin{minipage}{.9\linewidth}
+      Nom et prénom :
+      
+      \vspace*{.5cm}\dotfill
+      \vspace*{1mm}
+    \end{minipage}
+  }}\end{minipage}
+
+\vspace{1ex}
+
+
+
+\noindent\hrulefill
+
+\vspace{2ex}
+
+\begin{center}
+  Les questions faisant apparaître le symbole \multiSymbole{} peuvent
+  présenter zéro, une ou plusieurs bonnes réponses. Les autres ont une
+  unique bonne réponse.
+\end{center}
+
+\noindent\hrulefill
+
+\vspace{2ex}
+%%% fin de l'en-tête
+
+%\melangegroupe{amc}
+\restituegroupe{amc}
+
+%\clearpage    
+
+}   
+
+
+\end{document}

@@ -1,6 +1,6 @@
 import collections
-import unittest
 import copy
+import unittest
 
 from history.Operation import Operation
 from history.Story import Story
@@ -107,7 +107,7 @@ class StoryTest(unittest.TestCase):
 
     '''
         Tester si la méthode de vérifiction de sérialisabilité fonctionne pour une histoire reconnue sérialisable.
-        //L'objectif étant de s'assurer que la méthode qui permet de déterminer le caractère acyclique d'une histoire est fiable
+        L'objectif étant de s'assurer que la méthode qui permet de déterminer le caractère acyclique d'une histoire est fiable
     '''
 
     def test_serializable(self):
